@@ -3,36 +3,36 @@ from pyunitreport import HTMLTestRunner
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
+from time import sleep
 
 
-class ComareProducts(unittest.TestCase):
+class NavigationTest(unittest.TestCase):
 
 	#ejecuta lo necesario antes de hacer la prueba
+	
 	@classmethod 
 	def setUpClass(cls):
 		cls.driver = webdriver.Chrome(executable_path = '../chromedriver')
 		driver = cls.driver
-		driver.get('http://demo-store.seleniumacademy.com/')
-		driver.maximize_window()
+		driver.get('http://google.com')
+		driver.maximize_window()	
 
 	#Casos de prueba, para que el navegador los automatize
-	def test_compare_products_removal_alert(self):
+	def test_browser_navigation(self):
 		driver = self.driver
-		search_field = driver.find_element(By.ID, "search")
+
+		search_field = driver.find_element(By.NAME, 'q')
 		search_field.clear()
-		search_field.send_keys('tee')
+		search_field.send_keys('Gonzallo Guillen')
 		search_field.submit()
-	
-		driver.find_element(By.CLASS_NAME, "link-compare").click()
-		driver.find_element(By.LINK_TEXT, "Clear All").click()
 		driver.implicitly_wait(2)
 
-		alert = driver.switch_to.alert
-		alert_text = alert.text
-		self.assertEqual('Are you sure you would like to remove all products from your comparison?',alert_text)
-		alert.accept()
-
+		driver.back()
+		sleep(1)
+		driver.forward()
+		sleep(1)
+		driver.refresh()
+		sleep(1)
 
 	#Acciones para finalizar. Importante cerrar la ventana del navegador despues de cada prueba	
 	@classmethod
@@ -41,4 +41,3 @@ class ComareProducts(unittest.TestCase):
 
 if __name__ == '__main__':
 	unittest.main(verbosity = 2, testRunner = HTMLTestRunner(output = 'reportes', report_name = 'hello-world-report1'))
-	
