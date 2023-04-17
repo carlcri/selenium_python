@@ -17,36 +17,36 @@ class DynamicControls(unittest.TestCase):
 		cls.driver = webdriver.Chrome(executable_path = '../chromedriver')
 		driver = cls.driver
 		driver.get('http://the-internet.herokuapp.com/')
-		driver.find_element(By.LINK_TEXT, 'Dynamic Controls').click()
+		driver.find_element(By.LINK_TEXT, 'Typos').click()
 		driver.maximize_window()	
 
 	#Casos de prueba, para que el navegador los automatize
 
-	def test_dynamic_controls(self):
+	def test_find_typo(self):
 		driver = self.driver
-		checkBox = driver.find_element(By.CSS_SELECTOR, '#checkbox > input[type=checkbox]')
+		correct_text = "Sometimes you'll see a typo, other times you won't."
 
-		if checkBox.is_enabled == True:
-			checkBox.click()	
+		tries = 0
+		found = False
+		
 
-		removeAddButton = driver.find_element(By.CSS_SELECTOR, '#checkbox-example > button')
-		removeAddButton.click()
+		while(found is not True):
+			typo = driver.find_element(By.CSS_SELECTOR, '#content > div > p:nth-child(3)')
+			print(typo.text)
 
-		WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#checkbox-example > button')))
-		removeAddButton.click()
+			if typo.text != correct_text:
+				tries+=1
+				driver.refresh()
+			
+			else:
+				found = True
+				break
 
+			if tries >= 10:
+				break
 
-	def test_dynamic_controls_1(self):
-		driver = self.driver
-		enableDisablebutton = driver.find_element(By.CSS_SELECTOR, '#input-example > button')
-		enableDisablebutton.click()
-
-		WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#input-example > button')))
-		text_area = driver.find_element(By.CSS_SELECTOR, '#input-example > input[type=text]')
-		text_area.send_keys('Hola Mundo')
-
-		enableDisablebutton.click()
-
+		print(f'intentos: {tries+1}')
+		print(found)
 
 	#Acciones para finalizar. Importante cerrar la ventana del navegador despues de cada prueba	
 	@classmethod
